@@ -42,7 +42,7 @@ fun SettingsPage(
                 // Profile Management
                 SettingItem(
                     text = "Profile Management",
-                    onClick = onProfileClick
+                    onClick = { navController.navigate("profileManagement") }
                 )
 
                 // Notification Preferences

@@ -8,6 +8,7 @@ import com.example.aidsync.ui.patients.HomeScreen
 import com.example.aidsync.ui.patients.Login
 import com.example.aidsync.ui.patients.Register
 import com.example.aidsync.ui.patients.LandingPage // Import your LandingPage
+import com.example.aidsync.ui.patients.ProfileManagementPage
 import com.example.aidsync.ui.patients.SettingsPage
 import com.example.aidsync.ui.theme.AidSyncTheme
 
@@ -44,7 +45,13 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("settings") { // Add the SettingsPage composable
-                        SettingsPage(navController = navController)
+                        SettingsPage(
+                            navController = navController,
+                            onProfileClick = { navController.navigate("profileManagement") }
+                        )
+                    }
+                    composable("profileManagement") {
+                        ProfileManagementPage(navController = navController)
                     }
                 }
             }
