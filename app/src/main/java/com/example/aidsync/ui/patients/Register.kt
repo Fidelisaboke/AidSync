@@ -13,6 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.aidsync.ui.theme.AidSyncTheme
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.userProfileChangeRequest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,6 +22,8 @@ fun Register(
     onRegisterSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
+    var name by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -48,6 +52,27 @@ fun Register(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
+                // Name Field
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Phone Number Field
+                OutlinedTextField(
+                    value = phoneNumber,
+                    onValueChange = { phoneNumber = it },
+                    label = { Text("Phone Number") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Email Field
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -57,6 +82,7 @@ fun Register(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Password Field
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -67,6 +93,7 @@ fun Register(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Confirm Password Field
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
@@ -85,13 +112,31 @@ fun Register(
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
                                         // Registration successful
-                                        onRegisterSuccess()
-                                        registerError = false
-                                        Toast.makeText(
-                                            context,
-                                            "Registration successful!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        val currentUser: FirebaseUser? = auth.currentUser
+                                        val profileUpdates = userProfileChangeRequest {
+                                            displayName = name
+                                        }
+                                        currentUser?.updateProfile(profileUpdates)
+                                            ?.addOnCompleteListener { profileTask ->
+                                                if (profileTask.isSuccessful) {
+                                                    // Profile updated successfully
+                                                    onRegisterSuccess()
+                                                    registerError = false
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Registration successful!",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                } else {
+                                                    // Failed to update profile
+                                                    registerError = true
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Profile update failed: ${profileTask.exception?.message}",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
                                     } else {
                                         // Registration failed
                                         registerError = true

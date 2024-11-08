@@ -91,7 +91,7 @@ fun SettingsPage(
                 AlertDialog(
                     onDismissRequest = { showDialog = false },
                     title = { Text("Are you sure?") },
-                    text = { Text("Do you really want to log out?") },
+                    text = { Text("Do you want to log out?") },
                     confirmButton = {
                         TextButton(onClick = {
                             // Navigate to home screen upon confirmation

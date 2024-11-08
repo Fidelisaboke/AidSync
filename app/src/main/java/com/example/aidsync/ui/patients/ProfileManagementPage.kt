@@ -21,33 +21,38 @@ import com.google.firebase.auth.userProfileChangeRequest
 fun ProfileManagementPage(navController: NavController) {
     // Firebase Authentication instance
     val auth = FirebaseAuth.getInstance()
-    val currentUser: FirebaseUser? = auth.currentUser
+    val currentUser = auth.currentUser
 
     // State variables to hold user profile details
-    var name by remember { mutableStateOf(currentUser?.displayName ?: "Unknown User") }
-    var email by remember { mutableStateOf(currentUser?.email ?: "unknown@example.com") }
-    var phoneNumber by remember { mutableStateOf(currentUser?.phoneNumber ?: "Not Provided") }
+    var name by remember { mutableStateOf("Loading...") }
+    var email by remember { mutableStateOf("Loading...") }
+    var phoneNumber by remember { mutableStateOf("Loading...") }
+
+    // Fetch user details from Firebase when the composable is first composed
+    LaunchedEffect(currentUser) {
+        currentUser?.let { user ->
+            name = user.displayName ?: "Unknown User"
+            email = user.email ?: "unknown@example.com"
+            phoneNumber = user.phoneNumber ?: "Not Provided"
+        }
+    }
 
     // Function to save the updated profile
     fun saveProfile() {
-        // You can update the user's profile information in Firebase here
         currentUser?.let { user ->
             val profileUpdates = userProfileChangeRequest {
                 displayName = name
-                // Note: Email and phone number updates require separate Firebase methods
+                // Email and phone number updates require separate methods and verification
             }
+
             user.updateProfile(profileUpdates).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("ProfileManagement", "User profile updated.")
+                } else {
+                    Log.e("ProfileManagement", "Error updating profile", task.exception)
                 }
             }
         }
-
-        // For this example, we'll just print to the console
-        println("Profile saved!")
-        println("Name: $name")
-        println("Email: $email")
-        println("Phone Number: $phoneNumber")
     }
 
     Scaffold(
@@ -75,22 +80,22 @@ fun ProfileManagementPage(navController: NavController) {
                 Text("Email", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 TextField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = {},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    enabled = false // Email is typically not editable
+                    enabled = false // Email is not editable for now
                 )
 
                 // Phone Number
                 Text("Phone Number", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 TextField(
                     value = phoneNumber,
-                    onValueChange = { phoneNumber = it },
+                    onValueChange = {},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    enabled = false // Phone number updates require a verification process
+                    enabled = false // Phone number updates require verification
                 )
 
                 // Save Button
