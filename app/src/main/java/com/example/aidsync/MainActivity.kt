@@ -29,13 +29,23 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("login") {
                         Login(
-                            onLoginSuccess = { navController.navigate("landing") }, // Navigate to LandingPage
+                            onLoginSuccess = {
+                                navController.navigate("landing") {
+                                    // Remove home and login pages from back stack
+                                    popUpTo("home") { inclusive = true }
+                                }
+                            },
                             onNavigateToRegister = { navController.navigate("register") }
                         )
                     }
                     composable("register") {
                         Register(
-                            onRegisterSuccess = { navController.navigate("landing") }, // Navigate to LandingPage
+                            onRegisterSuccess = {
+                                navController.navigate("landing") {
+                                    // Remove home and register pages from back stack
+                                    popUpTo("home") { inclusive = true }
+                                }
+                            },
                             onNavigateToLogin = { navController.navigate("login") }
                         )
                     }
