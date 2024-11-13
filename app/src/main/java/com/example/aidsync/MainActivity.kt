@@ -4,12 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.*
+import com.example.aidsync.ui.patients.ConfirmationScreen
+import com.example.aidsync.ui.patients.EmergencySelectionScreen
 import com.example.aidsync.ui.patients.HomeScreen
 import com.example.aidsync.ui.patients.Login
 import com.example.aidsync.ui.patients.Register
 import com.example.aidsync.ui.patients.LandingPage // Import your LandingPage
 import com.example.aidsync.ui.patients.ProfileManagementPage
 import com.example.aidsync.ui.patients.SettingsPage
+import com.example.aidsync.ui.patients.SignInScreen
 import com.example.aidsync.ui.theme.AidSyncTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,8 +34,7 @@ class MainActivity : ComponentActivity() {
                         Login(
                             onLoginSuccess = {
                                 navController.navigate("landing") {
-                                    // Remove home and login pages from back stack
-                                    popUpTo("home") { inclusive = true }
+                                    popUpTo("home") { inclusive = true } // Remove home and register pages from back stack
                                 }
                             },
                             onNavigateToRegister = { navController.navigate("register") }
@@ -42,8 +44,7 @@ class MainActivity : ComponentActivity() {
                         Register(
                             onRegisterSuccess = {
                                 navController.navigate("landing") {
-                                    // Remove home and register pages from back stack
-                                    popUpTo("home") { inclusive = true }
+                                    popUpTo("home") { inclusive = true } // Remove home and register pages from back stack
                                 }
                             },
                             onNavigateToLogin = { navController.navigate("login") }

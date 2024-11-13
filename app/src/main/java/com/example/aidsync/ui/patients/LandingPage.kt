@@ -23,7 +23,8 @@ fun LandingPage(
     onHomeClick: () -> Unit = {},
     onCasualtyReportClick: () -> Unit = {},
     onPatientTrackerClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    onAmbulanceClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -54,6 +55,12 @@ fun LandingPage(
                     label = { Text("Patient Tracker") },
                     selected = false,
                     onClick = onPatientTrackerClick
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.LocalHospital, contentDescription = "Ambulance") },
+                    label = { Text("Ambulance") },
+                    selected = false,
+                    onClick = onAmbulanceClick
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
