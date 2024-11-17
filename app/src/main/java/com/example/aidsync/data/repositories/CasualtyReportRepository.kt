@@ -19,4 +19,13 @@ class CasualtyReportRepository(private val dao: CasualtyReportDao) {
     suspend fun deleteCasualtyReport(casualtyReport: CasualtyReport){
         dao.deleteReport(casualtyReport)
     }
+
+    fun getReportById(id: Int): Flow<CasualtyReport> {
+        return dao.getReportById(id)
+    }
+
+    fun getReportsByName(name: String): Flow<List<CasualtyReport>> {
+        return dao.getReportsByName(name)
+    }
+
 }
