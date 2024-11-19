@@ -2,6 +2,7 @@ package com.example.aidsync.ui.patients
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -98,6 +99,7 @@ fun FeatureButton(label: String, icon: ImageVector, onClick: () -> Unit) {
             .fillMaxWidth(0.8f)
             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
             .padding(8.dp)
+            .clickable(onClick = onClick)
     ) {
         Row(
             modifier = Modifier

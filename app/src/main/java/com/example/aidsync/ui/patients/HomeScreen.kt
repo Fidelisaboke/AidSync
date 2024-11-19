@@ -58,7 +58,7 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     // Card with Welcome Message
-                    Card(
+                     Card(
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxWidth(),
