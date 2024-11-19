@@ -9,6 +9,9 @@ data class CasualtyReport(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
+    @ColumnInfo(name = "recorded_by")
+    val recordedBy: Int,
+
     @ColumnInfo(name = "casualty_name")
     val casualtyName: String,
 
