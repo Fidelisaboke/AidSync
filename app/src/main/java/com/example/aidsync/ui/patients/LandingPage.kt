@@ -1,7 +1,9 @@
 package com.example.aidsync.ui.patients
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -9,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,52 +26,26 @@ fun LandingPage(
     onHomeClick: () -> Unit = {},
     onCasualtyReportClick: () -> Unit = {},
     onPatientTrackerClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {},
-    onAmbulanceClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Welcome to AidSync", fontWeight = FontWeight.Bold) },
+                title = { Text("Welcome", fontWeight = FontWeight.Bold) },
+                actions = {
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings",
+                            tint = Color.White
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = Color.White
                 )
             )
-        },
-        bottomBar = {
-            NavigationBar {
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                    label = { Text("Home") },
-                    selected = false,
-                    onClick = onHomeClick
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Description, contentDescription = "Casualty Report") },
-                    label = { Text("Casualty Report") },
-                    selected = false,
-                    onClick = onCasualtyReportClick
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.MedicalServices, contentDescription = "Patient Tracker") },
-                    label = { Text("Patient Tracker") },
-                    selected = false,
-                    onClick = onPatientTrackerClick
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.LocalHospital, contentDescription = "Ambulance") },
-                    label = { Text("Ambulance") },
-                    selected = false,
-                    onClick = onAmbulanceClick
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-                    label = { Text("Settings") },
-                    selected = false,
-                    onClick = onSettingsClick
-                )
-            }
         },
         content = { innerPadding ->
             Column(
@@ -98,9 +75,51 @@ fun LandingPage(
                     modifier = Modifier.padding(bottom = 24.dp),
                     color = Color.Gray
                 )
+
+                // Feature buttons as centered boxes
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    FeatureButton("Home", Icons.Default.Home, onHomeClick)
+                    FeatureButton("Casualty Report", Icons.Default.Description, onCasualtyReportClick)
+                    FeatureButton("Patient Tracker", Icons.Default.MedicalServices, onPatientTrackerClick)
+                }
             }
         }
     )
+}
+
+@Composable
+fun FeatureButton(label: String, icon: ImageVector, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+            .padding(8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Icon(
+                icon,
+                contentDescription = label,
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = label,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
