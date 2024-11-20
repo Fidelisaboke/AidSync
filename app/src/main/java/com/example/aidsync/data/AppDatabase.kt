@@ -10,12 +10,14 @@ import com.example.aidsync.data.dao.FluidBalanceLogDao
 import com.example.aidsync.data.dao.InventoryItemDao
 import com.example.aidsync.data.dao.PatientDao
 import com.example.aidsync.data.dao.PatientLogDao
+import com.example.aidsync.data.dao.UserDao
 import com.example.aidsync.data.entities.CasualtyReport
 import com.example.aidsync.data.entities.DietaryLog
 import com.example.aidsync.data.entities.FluidBalanceLog
 import com.example.aidsync.data.entities.InventoryItem
 import com.example.aidsync.data.entities.Patient
 import com.example.aidsync.data.entities.PatientLog
+import com.example.aidsync.data.entities.User
 
 
 @Database(
@@ -26,6 +28,7 @@ import com.example.aidsync.data.entities.PatientLog
         InventoryItem::class,
         Patient::class,
         PatientLog::class,
+        User::class
     ],
     version = 1,
     exportSchema = false
@@ -37,6 +40,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun inventoryItemDao(): InventoryItemDao
     abstract fun patientDao(): PatientDao
     abstract fun patientLogDao(): PatientLogDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
