@@ -11,9 +11,25 @@ import com.example.aidsync.data.dao.InventoryItemDao
 import com.example.aidsync.data.dao.PatientDao
 import com.example.aidsync.data.dao.PatientLogDao
 import com.example.aidsync.data.entities.CasualtyReport
+import com.example.aidsync.data.entities.DietaryLog
+import com.example.aidsync.data.entities.FluidBalanceLog
+import com.example.aidsync.data.entities.InventoryItem
+import com.example.aidsync.data.entities.Patient
+import com.example.aidsync.data.entities.PatientLog
 
 
-@Database(entities = [CasualtyReport::class], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        CasualtyReport::class,
+        DietaryLog::class,
+        FluidBalanceLog::class,
+        InventoryItem::class,
+        Patient::class,
+        PatientLog::class,
+    ],
+    version = 1,
+    exportSchema = false
+)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun casualtyReportDao(): CasualtyReportDao
     abstract fun dietaryLogDao(): DietaryLogDao
