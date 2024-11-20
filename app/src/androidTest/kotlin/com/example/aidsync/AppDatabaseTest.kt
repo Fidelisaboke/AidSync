@@ -51,7 +51,7 @@ class AppDatabaseTest {
      * Test that the database is initialized correctly.
      */
     @Test
-    fun testDatabaseIsInitialized() {
+    fun database_is_initialized_correctly() {
         assertNotNull(db)
         assertNotNull(casualtyReportDao)
     }
@@ -60,7 +60,7 @@ class AppDatabaseTest {
      * Test that a casualty report can be inserted into the database and retrieved.
      */
     @Test
-    fun testInsertAndRetrieveCasualtyReport() = runBlocking {
+    fun insert_and_retrieve_casualty_report_successfully() = runBlocking {
         val report = CasualtyReport(
             casualtyName = "John Doe",
             casualtyAge = 30,
@@ -71,7 +71,8 @@ class AppDatabaseTest {
             incidentLocation = "123 Main St.",
             bodyPartsInjured = "Head",
             stateOfResponsiveness = "Responsive",
-            gender = "M"
+            gender = "M",
+            recordedBy = 123
         )
 
         casualtyReportDao.insertReport(report)
