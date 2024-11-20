@@ -1,6 +1,7 @@
 package com.example.aidsync.ui.patients
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +32,7 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("Home", color = Color.White) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = Color(0xFF111827) // Dark theme for TopAppBar
                 )
             )
         },
@@ -40,13 +41,15 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
+                    .background(Color(0xFF111827)) // Dark background
             ) {
-                // Background Image
+                // Background Image (Optional, can fade into the dark theme)
                 Image(
                     painter = painterResource(id = R.drawable.home), // Replace with your image resource
                     contentDescription = "Background Image",
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    alpha = 0.2f // Faded image effect for consistency
                 )
 
                 // Overlay Content
@@ -58,12 +61,12 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     // Card with Welcome Message
-                     Card(
+                    Card(
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.8f))
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1F2937)) // Dark card background
                     ) {
                         Column(
                             modifier = Modifier.padding(16.dp),
@@ -73,7 +76,7 @@ fun HomeScreen(
                                 text = "Welcome to AidSync+",
                                 fontSize = 28.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
+                                color = Color.Green, // Accent green color
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             )
@@ -92,14 +95,14 @@ fun HomeScreen(
                     ButtonWithHoverEffect(
                         text = "Login",
                         onClick = onLoginClick,
-                        backgroundColor = MaterialTheme.colorScheme.secondary,
+                        backgroundColor = Color.Green, // Green accent button
                         textColor = Color.White
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     ButtonWithHoverEffect(
                         text = "Register",
                         onClick = onRegisterClick,
-                        backgroundColor = MaterialTheme.colorScheme.tertiary,
+                        backgroundColor = Color(0xFF4CAF50), // Slightly lighter green for differentiation
                         textColor = Color.White
                     )
                 }
