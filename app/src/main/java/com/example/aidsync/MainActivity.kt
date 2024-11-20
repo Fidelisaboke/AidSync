@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.*
+import com.example.aidsync.ui.casualtyreport.CasualtyReportScreen
 import com.example.aidsync.ui.patients.HomeScreen
 import com.example.aidsync.ui.patients.LandingPage
 import com.example.aidsync.ui.patients.Login
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
             AidSyncTheme {
                 val navController = rememberNavController()
 
-                // Set up NavHost for managing navigation
+                // NavHost to manage navigation
                 NavHost(navController = navController, startDestination = "home") {
                     composable("home") {
                         HomeScreen(
@@ -31,18 +32,17 @@ class MainActivity : ComponentActivity() {
                         Login(
                             onLoginSuccess = {
                                 navController.navigate("landing") {
-                                    popUpTo("home") { inclusive = true } // Remove home and register pages from back stack
+                                    popUpTo("home") { inclusive = true }
                                 }
                             },
                             onNavigateToRegister = { navController.navigate("register") }
                         )
                     }
-
                     composable("register") {
                         Register(
                             onRegisterSuccess = {
                                 navController.navigate("landing") {
-                                    popUpTo("home") { inclusive = true } // Remove home and register pages from back stack
+                                    popUpTo("home") { inclusive = true }
                                 }
                             },
                             onNavigateToLogin = { navController.navigate("login") }
@@ -50,10 +50,11 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("landing") {
                         LandingPage(
-                            onSettingsClick = { navController.navigate("settings") }
+                            onSettingsClick = { navController.navigate("settings") },
+                            onCasualtyReportClick = { navController.navigate("casualtyReport") } // Navigation to casualty report
                         )
                     }
-                    composable("settings") { // Add the SettingsPage composable
+                    composable("settings") {
                         SettingsPage(
                             navController = navController,
                             onProfileClick = { navController.navigate("profileManagement") }
@@ -61,6 +62,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("profileManagement") {
                         ProfileManagementPage(navController = navController)
+                    }
+                    composable("casualtyReport") {
+                        CasualtyReportScreen() // Route to CasualtyReportScreen
                     }
                 }
             }
