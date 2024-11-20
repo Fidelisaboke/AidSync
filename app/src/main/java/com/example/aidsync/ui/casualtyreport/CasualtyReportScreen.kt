@@ -110,7 +110,8 @@ fun AddCasualtyReportDialog(
                     incidentTime = incidentTime.text,
                     bodyPartsInjured = bodyPartsInjured.text,
                     stateOfResponsiveness = stateOfResponsiveness.text,
-                    gender = gender.text
+                    gender = gender.text,
+                    recordedBy = 123 // Temporary fix -> replace with actual value
                 )
                 onAddReport(report)
             }) {
