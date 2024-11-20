@@ -75,7 +75,7 @@ fun Login(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Transparent),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
             )

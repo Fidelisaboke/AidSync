@@ -44,31 +44,6 @@ fun SettingsPage(
                     text = "Profile Management",
                     onClick = { navController.navigate("profileManagement") }
                 )
-
-                // Notification Preferences
-                SettingItem(
-                    text = "Notification Preferences",
-                    onClick = onNotificationsClick
-                )
-
-                // Theme Settings
-                SettingItem(
-                    text = "Theme Settings",
-                    onClick = onThemeClick
-                )
-
-                // Language Settings
-                SettingItem(
-                    text = "Language Settings",
-                    onClick = onLanguageClick
-                )
-
-                // Privacy Settings
-                SettingItem(
-                    text = "Privacy Settings",
-                    onClick = onPrivacyClick
-                )
-
                 // Help & Support
                 SettingItem(
                     text = "Help & Support",

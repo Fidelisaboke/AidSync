@@ -24,9 +24,9 @@ import com.example.aidsync.ui.theme.AidSyncTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LandingPage(
-    onHomeClick: () -> Unit = {},
     onCasualtyReportClick: () -> Unit = {},
     onPatientTrackerClick: () -> Unit = {},
+    onFirstAidTopicsClick: () -> Unit = {}, // Added parameter for First Aid Topics
     onSettingsClick: () -> Unit = {}
 ) {
     Scaffold(
@@ -83,9 +83,9 @@ fun LandingPage(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    FeatureButton("Home", Icons.Default.Home, onHomeClick)
                     FeatureButton("Casualty Report", Icons.Default.Description, onCasualtyReportClick)
                     FeatureButton("Patient Tracker", Icons.Default.MedicalServices, onPatientTrackerClick)
+                    FeatureButton("First Aid Topics", Icons.Default.Info, onFirstAidTopicsClick) // Added button
                 }
             }
         }

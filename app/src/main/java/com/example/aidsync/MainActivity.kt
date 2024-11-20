@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.*
 import com.example.aidsync.ui.casualtyreport.CasualtyReportScreen
+import com.example.aidsync.ui.firstaid.FirstAidDetailsScreen
+import com.example.aidsync.ui.firstaid.FirstAidTopicsPage
 import com.example.aidsync.ui.patients.HomeScreen
 import com.example.aidsync.ui.patients.LandingPage
 import com.example.aidsync.ui.patients.Login
@@ -51,12 +53,13 @@ class MainActivity : ComponentActivity() {
                     composable("landing") {
                         LandingPage(
                             onSettingsClick = { navController.navigate("settings") },
-                            onCasualtyReportClick = { navController.navigate("casualtyReport") } // Navigation to casualty report
+                            onFirstAidTopicsClick = { navController.navigate("firstAidTopics") },
+                            onCasualtyReportClick = { navController.navigate("casualtyReport") }
                         )
                     }
                     composable("settings") {
                         SettingsPage(
-                            navController = navController,
+                            navController = navController,  // Pass navController to SettingsPage
                             onProfileClick = { navController.navigate("profileManagement") }
                         )
                     }
@@ -65,6 +68,20 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("casualtyReport") {
                         CasualtyReportScreen() // Route to CasualtyReportScreen
+                    }
+                    composable("firstAidTopics") {
+                        FirstAidTopicsPage(
+                            navController = navController,  // Pass navController to FirstAidTopicsPage
+                            onBackClick = { navController.navigateUp() }
+                        )
+                    }
+
+                    composable("firstAidDetails/{topic}") { backStackEntry ->
+                        val topic = backStackEntry.arguments?.getString("topic") ?: ""
+                        FirstAidDetailsScreen(
+                            topic = topic,
+                            navController = navController
+                        )
                     }
                 }
             }
