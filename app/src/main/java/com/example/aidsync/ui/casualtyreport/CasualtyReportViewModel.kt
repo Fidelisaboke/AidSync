@@ -19,7 +19,7 @@ class CasualtyReportViewModel(application: Application): AndroidViewModel(applic
         allReports = repository.allReports
     }
 
-    fun insertReport(report: CasualtyReport) = viewModelScope.launch{
+    fun insertReport(report: CasualtyReport) = viewModelScope.launch {
         repository.insertCasualtyReport(report)
     }
 }

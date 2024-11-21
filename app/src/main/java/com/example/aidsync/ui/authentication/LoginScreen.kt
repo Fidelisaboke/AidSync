@@ -1,4 +1,4 @@
-package com.example.aidsync.ui.patients
+package com.example.aidsync.ui.authentication
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -28,7 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login(
+fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit
 ) {
@@ -150,7 +150,7 @@ fun Login(
 @Composable
 fun LoginPreview() {
     AidSyncTheme {
-        Login(
+        LoginScreen(
             onLoginSuccess = { println("Login successful!") },
             onNavigateToRegister = { println("Navigating to register screen") }
         )

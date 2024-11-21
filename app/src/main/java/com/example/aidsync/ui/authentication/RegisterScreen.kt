@@ -1,4 +1,4 @@
-package com.example.aidsync.ui.patients
+package com.example.aidsync.ui.authentication
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
