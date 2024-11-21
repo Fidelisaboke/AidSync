@@ -11,7 +11,7 @@ import com.example.aidsync.ui.patients.HomeScreen
 import com.example.aidsync.ui.patients.LandingPage
 import com.example.aidsync.ui.patients.Login
 import com.example.aidsync.ui.patients.ProfileManagementPage
-import com.example.aidsync.ui.patients.Register
+import com.example.aidsync.ui.authentication.Register
 import com.example.aidsync.ui.patients.SettingsPage
 import com.example.aidsync.ui.theme.AidSyncTheme
 

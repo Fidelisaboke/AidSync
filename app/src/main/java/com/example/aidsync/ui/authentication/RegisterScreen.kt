@@ -1,4 +1,4 @@
-package com.example.aidsync.ui.patients
+package com.example.aidsync.ui.authentication
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -25,17 +25,21 @@ import androidx.compose.ui.unit.sp
 import com.example.aidsync.R
 import com.example.aidsync.ui.theme.AidSyncTheme
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.userProfileChangeRequest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login(
-    onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+fun Register(
+    onRegisterSuccess: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
-    var loginError by remember { mutableStateOf(false) }
+    var registerError by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val auth = FirebaseAuth.getInstance()
 
@@ -58,7 +62,7 @@ fun Login(
 
         // Title
         Text(
-            text = "Sign in to your Account",
+            text = "Create your Account",
             color = Color.White,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
@@ -67,14 +71,26 @@ fun Login(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Name Field
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Full Name", color = Color.Gray) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults. colors(
+                unfocusedBorderColor = Color.Gray,
+                focusedBorderColor = Color.Green
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Email Field
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email", color = Color.Gray) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Transparent),
+            modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
@@ -96,7 +112,7 @@ fun Login(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
             )
@@ -104,41 +120,70 @@ fun Login(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Login Button
+        // Confirm Password Field
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text("Confirm Password", color = Color.Gray) },
+            visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults. colors(
+                unfocusedBorderColor = Color.Gray,
+                focusedBorderColor = Color.Green
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Register Button
         Button(
             onClick = {
-                if (email.isNotBlank() && password.isNotBlank()) {
-                    auth.signInWithEmailAndPassword(email, password)
+                if (email.isNotBlank() && password == confirmPassword && password.isNotBlank()) {
+                    auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                onLoginSuccess()
+                                val currentUser: FirebaseUser? = auth.currentUser
+                                val profileUpdates = userProfileChangeRequest {
+                                    displayName = name
+                                }
+                                currentUser?.updateProfile(profileUpdates)
+                                    ?.addOnCompleteListener { profileTask ->
+                                        if (profileTask.isSuccessful) {
+                                            onRegisterSuccess()
+                                            registerError = false
+                                            Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            registerError = true
+                                            Toast.makeText(context, "Profile update failed: ${profileTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
                             } else {
-                                loginError = true
-                                Toast.makeText(context, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                                registerError = true
+                                Toast.makeText(context, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                             }
                         }
                 } else {
-                    loginError = true
+                    registerError = true
                 }
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Text("Login", color = Color.White, fontSize = 16.sp)
+            Text("Register", color = Color.White, fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(
-            onClick = { onNavigateToRegister() }
+            onClick = { onNavigateToLogin() }
         ) {
-            Text("Don't have an account? Register", color = Color.Green, fontSize = 14.sp)
+            Text("Already have an account? Login", color = Color.Green, fontSize = 14.sp)
         }
 
-        if (loginError) {
+        if (registerError) {
             Text(
-                text = "Invalid credentials, please try again.",
+                text = "Please check your inputs and try again.",
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.padding(top = 8.dp)
             )
@@ -148,11 +193,11 @@ fun Login(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginPreview() {
+fun RegisterPreview() {
     AidSyncTheme {
-        Login(
-            onLoginSuccess = { println("Login successful!") },
-            onNavigateToRegister = { println("Navigating to register screen") }
+        Register(
+            onRegisterSuccess = { println("Registration successful!") },
+            onNavigateToLogin = { println("Navigating to login screen") }
         )
     }
 }
