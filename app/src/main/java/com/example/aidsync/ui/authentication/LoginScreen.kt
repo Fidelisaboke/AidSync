@@ -75,7 +75,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Transparent),
-            colors = OutlinedTextFieldDefaults. colors(
+            colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
             )
@@ -96,7 +96,7 @@ fun LoginScreen(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
             )
