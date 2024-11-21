@@ -22,22 +22,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.aidsync.R
+import com.example.aidsync.data.entities.User
 import com.example.aidsync.ui.theme.AidSyncTheme
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    viewModel: LoginViewModel = viewModel()
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     var loginError by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val auth = FirebaseAuth.getInstance()
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -108,17 +112,24 @@ fun LoginScreen(
         Button(
             onClick = {
                 if (email.isNotBlank() && password.isNotBlank()) {
-                    auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                onLoginSuccess()
-                            } else {
-                                loginError = true
-                                Toast.makeText(context, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                            }
+                    scope.launch {
+                        val loginSuccess = viewModel.login(email, password)
+
+                        if (loginSuccess) {
+                            onLoginSuccess()
+                        } else{
+                            loginError = true
+                            Toast.makeText(
+                                context,
+                                "Login failed. Please try again.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
+                    }
+
                 } else {
                     loginError = true
+                    Toast.makeText(context, "Login failed. Please fill in the ", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier.fillMaxWidth(),
