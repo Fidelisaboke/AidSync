@@ -30,7 +30,7 @@ import com.google.firebase.auth.userProfileChangeRequest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Register(
+fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
@@ -195,7 +195,7 @@ fun Register(
 @Composable
 fun RegisterPreview() {
     AidSyncTheme {
-        Register(
+        RegisterScreen(
             onRegisterSuccess = { println("Registration successful!") },
             onNavigateToLogin = { println("Navigating to login screen") }
         )

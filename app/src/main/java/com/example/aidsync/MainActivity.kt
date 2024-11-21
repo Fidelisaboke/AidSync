@@ -9,9 +9,9 @@ import com.example.aidsync.ui.firstaid.FirstAidDetailsScreen
 import com.example.aidsync.ui.firstaid.FirstAidTopicsPage
 import com.example.aidsync.ui.patients.HomeScreen
 import com.example.aidsync.ui.patients.LandingPage
-import com.example.aidsync.ui.patients.Login
+import com.example.aidsync.ui.authentication.LoginScreen as Login
 import com.example.aidsync.ui.patients.ProfileManagementPage
-import com.example.aidsync.ui.authentication.Register
+import com.example.aidsync.ui.authentication.RegisterScreen
 import com.example.aidsync.ui.patients.SettingsPage
 import com.example.aidsync.ui.theme.AidSyncTheme
 
@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("register") {
-                        Register(
+                        RegisterScreen(
                             onRegisterSuccess = {
                                 navController.navigate("landing") {
                                     popUpTo("home") { inclusive = true }
