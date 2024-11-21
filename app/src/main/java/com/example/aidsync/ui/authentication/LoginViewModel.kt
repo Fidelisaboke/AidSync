@@ -16,7 +16,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
         repository = UserRepository(dao)
     }
 
-    fun login(user: User) = viewModelScope.launch {
-        repository.loginUser(user)
+    suspend fun login(email: String, password: String): Boolean {
+        return repository.loginUser(email, password)
     }
 }

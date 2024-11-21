@@ -22,17 +22,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.aidsync.R
+import com.example.aidsync.data.entities.User
 import com.example.aidsync.ui.theme.AidSyncTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.userProfileChangeRequest
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Register(
+fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    viewModel: RegisterViewModel = viewModel()
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -41,7 +45,7 @@ fun Register(
     var isPasswordVisible by remember { mutableStateOf(false) }
     var registerError by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val auth = FirebaseAuth.getInstance()
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -139,31 +143,33 @@ fun Register(
         Button(
             onClick = {
                 if (email.isNotBlank() && password == confirmPassword && password.isNotBlank()) {
-                    auth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                val currentUser: FirebaseUser? = auth.currentUser
-                                val profileUpdates = userProfileChangeRequest {
-                                    displayName = name
-                                }
-                                currentUser?.updateProfile(profileUpdates)
-                                    ?.addOnCompleteListener { profileTask ->
-                                        if (profileTask.isSuccessful) {
-                                            onRegisterSuccess()
-                                            registerError = false
-                                            Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            registerError = true
-                                            Toast.makeText(context, "Profile update failed: ${profileTask.exception?.message}", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                            } else {
-                                registerError = true
-                                Toast.makeText(context, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                            }
+                    scope.launch {
+                        val user = User(name = name, email = email, password = password)
+                        val registerSuccess = viewModel.register(user)
+
+                        if (registerSuccess) {
+                            onRegisterSuccess()
+                            Toast.makeText(
+                                context,
+                                "Registration successful!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            registerError = true
+                            Toast.makeText(
+                                context,
+                                "Registration failed. Please try again.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
+                    }
                 } else {
                     registerError = true
+                    Toast.makeText(
+                        context,
+                        "Registration failed. Please check your inputs and try again.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -195,7 +201,7 @@ fun Register(
 @Composable
 fun RegisterPreview() {
     AidSyncTheme {
-        Register(
+        RegisterScreen(
             onRegisterSuccess = { println("Registration successful!") },
             onNavigateToLogin = { println("Navigating to login screen") }
         )

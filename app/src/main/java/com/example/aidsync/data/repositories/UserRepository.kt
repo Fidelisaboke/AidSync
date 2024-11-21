@@ -24,9 +24,9 @@ class UserRepository(val dao: UserDao) {
     /**
      * Login user with the provided credentials.
      */
-    suspend fun loginUser(user: User): Boolean {
-        val existingUser = dao.getUserByEmail(user.email) ?: return false
-        return verifyPassword(user.password, existingUser.password)
+    suspend fun loginUser(email: String, password: String): Boolean {
+        val existingUser = dao.getUserByEmail(email) ?: return false
+        return verifyPassword(password, existingUser.password)
     }
 
     /**

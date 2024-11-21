@@ -16,7 +16,7 @@ class RegisterViewModel(application: Application): AndroidViewModel(application)
         repository = UserRepository(dao)
     }
 
-    fun register(user: User) = viewModelScope.launch {
-        repository.registerUser(user)
+    suspend fun register(user: User): Boolean {
+        return repository.registerUser(user)
     }
 }
