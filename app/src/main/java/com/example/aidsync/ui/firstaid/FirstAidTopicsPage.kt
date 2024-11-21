@@ -7,19 +7,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +38,7 @@ fun FirstAidTopicsPage(navController: NavController, onBackClick: () -> Unit) {
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF111827)) // Dark top bar
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF111827))
             )
         }
     ) { paddingValues ->
@@ -45,14 +46,14 @@ fun FirstAidTopicsPage(navController: NavController, onBackClick: () -> Unit) {
             contentPadding = paddingValues,
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF111827)) // Dark background
+                .background(Color(0xFF111827))
         ) {
             item {
                 Text(
                     text = "Select a Topic",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Green, // Accent green
+                    color = Color.Green,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -68,7 +69,6 @@ fun FirstAidTopicsPage(navController: NavController, onBackClick: () -> Unit) {
                         "Stroke", "Tick Bites"
                     ),
                     onTopicClick = { topic ->
-                        // Navigate to the FirstAidDetailsScreen with the selected topic
                         navController.navigate("firstAidDetails/$topic")
                     }
                 )
@@ -97,25 +97,52 @@ fun GridLayout(topics: List<String>, onTopicClick: (String) -> Unit) {
 
 @Composable
 fun FirstAidButton(label: String, onClick: () -> Unit) {
+    val icon = when (label) {
+        "CPR" -> Icons.Default.Favorite
+        "Bleeding" -> Icons.Default.Bloodtype
+        "Burns" -> Icons.Default.LocalFireDepartment
+        "Choking" -> Icons.Default.Masks
+        "Poisons" -> Icons.Default.Science
+        "Wound Care" -> Icons.Default.Healing
+        "Allergic Reaction" -> Icons.Default.Coronavirus
+        "Asthma" -> Icons.Default.Air
+        "Anaphylaxis" -> Icons.Default.MedicalServices
+        "Diabetics" -> Icons.Default.Medication
+        "Eye Injury" -> Icons.Default.Visibility
+        "Electric Shock" -> Icons.Default.Bolt
+        "Fractures" -> Icons.Default.Accessibility
+        "Frostbite" -> Icons.Default.AcUnit
+        "Head Injury" -> Icons.Default.Psychology
+        "Heart Condition" -> Icons.Default.HeartBroken
+        "Nosebleed" -> Icons.Default.WaterDrop
+        "Seizure" -> Icons.Default.Bolt
+        "Shock" -> Icons.Default.ElectricBolt
+        "Spinal Injury" -> Icons.Default.AccessibilityNew
+        "Sprains & Strains" -> Icons.Default.FitnessCenter
+        "Stroke" -> Icons.Default.MedicalInformation
+        "Tick Bites" -> Icons.Default.BugReport
+        else -> Icons.Default.Info
+    }
+
     Column(
         modifier = Modifier
             .padding(8.dp)
             .size(100.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF1F2937)) // Dark card background
+            .background(Color(0xFF1F2937))
             .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Placeholder for icons (add actual icons if available)
-        Box(
-            modifier = Modifier
-                .size(36.dp)
-                .background(Color.Red, shape = RoundedCornerShape(50)) // Red accent
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = Color.Green,
+            modifier = Modifier.size(36.dp)
         )
         Text(
             text = label,
-            color = Color.White, // White text for visibility
+            color = Color.White,
             fontSize = 14.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp)
@@ -126,6 +153,8 @@ fun FirstAidButton(label: String, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun FirstAidTopicsPreview() {
-    // Create a mock NavController for preview
-    FirstAidTopicsPage(navController = NavController(LocalContext.current), onBackClick = {})
+    FirstAidTopicsPage(
+        navController = rememberNavController(),
+        onBackClick = {}
+    )
 }
