@@ -4,9 +4,9 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -84,14 +84,13 @@ fun RegisterScreen(
             label = { Text("Full Name", color = Color.Gray) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults. colors(
+            colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next
-            ),
-            singleLine = true
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -103,15 +102,14 @@ fun RegisterScreen(
             label = { Text("Email", color = Color.Gray) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults. colors(
+            colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
-            ),
-            singleLine = true
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -136,9 +134,8 @@ fun RegisterScreen(
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next,
-            ),
-            singleLine = true
+                imeAction = ImeAction.Next
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -151,13 +148,13 @@ fun RegisterScreen(
             singleLine = true,
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults. colors(
+            colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
+                imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -172,9 +169,8 @@ fun RegisterScreen(
                         onRegisterSuccess = onRegisterSuccess,
                         onRegisterError = { registerError = true }
                     )
-                },
-            ),
-            singleLine = true
+                }
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -219,17 +215,6 @@ fun RegisterScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RegisterPreview() {
-    AidSyncTheme {
-        RegisterScreen(
-            onRegisterSuccess = { println("Registration successful!") },
-            onNavigateToLogin = { println("Navigating to login screen") }
-        )
-    }
-}
-
 /**
  * Validates and registers a new user.
  */
@@ -243,7 +228,7 @@ private fun validateAndRegister(
     context: android.content.Context,
     onRegisterSuccess: () -> Unit,
     onRegisterError: () -> Unit
-){
+) {
     if (email.isNotBlank() && password == confirmPassword && password.isNotBlank()) {
         scope.launch {
             val user = User(name = name, email = email, password = password)
@@ -272,5 +257,17 @@ private fun validateAndRegister(
             "Registration failed. Please check your inputs and try again.",
             Toast.LENGTH_SHORT
         ).show()
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun RegisterPreview() {
+    AidSyncTheme {
+        RegisterScreen(
+            onRegisterSuccess = { println("Registration successful!") },
+            onNavigateToLogin = { println("Navigating to login screen") }
+        )
     }
 }
