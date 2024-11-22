@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -16,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -25,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.aidsync.R
 import com.example.aidsync.ui.theme.AidSyncTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,7 +85,12 @@ fun LoginScreen(
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -101,7 +111,23 @@ fun LoginScreen(
             colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions {
+                validateAndLogin(
+                    email = email,
+                    password = password,
+                    viewModel = viewModel,
+                    scope = scope,
+                    context = context,
+                    onLoginSuccess = onLoginSuccess,
+                    onLoginError = { loginError = true }
+                )
+            },
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -109,26 +135,15 @@ fun LoginScreen(
         // Login Button
         Button(
             onClick = {
-                if (email.isNotBlank() && password.isNotBlank()) {
-                    scope.launch {
-                        val loginSuccess = viewModel.login(email, password)
-
-                        if (loginSuccess) {
-                            onLoginSuccess()
-                        } else{
-                            loginError = true
-                            Toast.makeText(
-                                context,
-                                "Login failed. Please try again.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-
-                } else {
-                    loginError = true
-                    Toast.makeText(context, "Login failed. Please fill in the ", Toast.LENGTH_SHORT).show()
-                }
+                validateAndLogin(
+                    email = email,
+                    password = password,
+                    viewModel = viewModel,
+                    scope = scope,
+                    context = context,
+                    onLoginSuccess = onLoginSuccess,
+                    onLoginError = { loginError = true }
+                )
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
@@ -163,5 +178,36 @@ fun LoginPreview() {
             onLoginSuccess = { println("Login successful!") },
             onNavigateToRegister = { println("Navigating to register screen") }
         )
+    }
+}
+
+private fun validateAndLogin(
+    email: String,
+    password: String,
+    viewModel: LoginViewModel,
+    scope: CoroutineScope,
+    context: android.content.Context,
+    onLoginSuccess: () -> Unit,
+    onLoginError: () -> Unit
+){
+    if (email.isNotBlank() && password.isNotBlank()) {
+        scope.launch {
+            val loginSuccess = viewModel.login(email, password)
+
+            if (loginSuccess) {
+                onLoginSuccess()
+            } else{
+                onLoginError()
+                Toast.makeText(
+                    context,
+                    "Login failed. Please try again.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+    } else {
+        onLoginError()
+        Toast.makeText(context, "Login failed. Please fill in the ", Toast.LENGTH_SHORT).show()
     }
 }

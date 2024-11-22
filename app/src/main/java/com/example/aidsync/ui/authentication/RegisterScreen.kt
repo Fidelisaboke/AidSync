@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -16,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -26,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.aidsync.R
 import com.example.aidsync.data.entities.User
 import com.example.aidsync.ui.theme.AidSyncTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +86,11 @@ fun RegisterScreen(
             colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+            ),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -95,7 +104,12 @@ fun RegisterScreen(
             colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -113,10 +127,15 @@ fun RegisterScreen(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults. colors(
+            colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next,
+            ),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -131,7 +150,27 @@ fun RegisterScreen(
             colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    validateAndRegister(
+                        name = name,
+                        email = email,
+                        password = password,
+                        confirmPassword = confirmPassword,
+                        context = context,
+                        scope = scope,
+                        viewModel = viewModel,
+                        onRegisterSuccess = onRegisterSuccess,
+                        onRegisterError = { registerError = true }
+                    )
+                },
+            ),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -139,35 +178,17 @@ fun RegisterScreen(
         // Register Button
         Button(
             onClick = {
-                if (email.isNotBlank() && password == confirmPassword && password.isNotBlank()) {
-                    scope.launch {
-                        val user = User(name = name, email = email, password = password)
-                        val registerSuccess = viewModel.register(user)
-
-                        if (registerSuccess) {
-                            onRegisterSuccess()
-                            Toast.makeText(
-                                context,
-                                "Registration successful!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            registerError = true
-                            Toast.makeText(
-                                context,
-                                "Registration failed. Please try again.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                } else {
-                    registerError = true
-                    Toast.makeText(
-                        context,
-                        "Registration failed. Please check your inputs and try again.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                validateAndRegister(
+                    name = name,
+                    email = email,
+                    password = password,
+                    confirmPassword = confirmPassword,
+                    context = context,
+                    scope = scope,
+                    viewModel = viewModel,
+                    onRegisterSuccess = onRegisterSuccess,
+                    onRegisterError = { registerError = true }
+                )
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
@@ -202,5 +223,50 @@ fun RegisterPreview() {
             onRegisterSuccess = { println("Registration successful!") },
             onNavigateToLogin = { println("Navigating to login screen") }
         )
+    }
+}
+
+/**
+ * Validates and registers a new user.
+ */
+private fun validateAndRegister(
+    name: String,
+    email: String,
+    password: String,
+    confirmPassword: String,
+    viewModel: RegisterViewModel,
+    scope: CoroutineScope,
+    context: android.content.Context,
+    onRegisterSuccess: () -> Unit,
+    onRegisterError: () -> Unit
+){
+    if (email.isNotBlank() && password == confirmPassword && password.isNotBlank()) {
+        scope.launch {
+            val user = User(name = name, email = email, password = password)
+            val registerSuccess = viewModel.register(user)
+
+            if (registerSuccess) {
+                onRegisterSuccess()
+                Toast.makeText(
+                    context,
+                    "Registration successful!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                onRegisterError()
+                Toast.makeText(
+                    context,
+                    "Registration failed. Please try again.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    } else {
+        onRegisterError()
+        Toast.makeText(
+            context,
+            "Registration failed. Please check your inputs and try again.",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
