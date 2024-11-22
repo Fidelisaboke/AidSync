@@ -1,4 +1,4 @@
-package com.example.aidsync.ui.patients
+package com.example.aidsync.ui.settings
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -13,7 +13,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.aidsync.ui.theme.AidSyncTheme
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.userProfileChangeRequest
 
 @OptIn(ExperimentalMaterial3Api::class)

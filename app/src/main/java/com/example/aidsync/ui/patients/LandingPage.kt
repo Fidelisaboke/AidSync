@@ -27,7 +27,8 @@ fun LandingPage(
     onCasualtyReportClick: () -> Unit = {},
     onPatientTrackerClick: () -> Unit = {},
     onFirstAidTopicsClick: () -> Unit = {}, // Added parameter for First Aid Topics
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    onEmergencyHotlinesClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -38,6 +39,13 @@ fun LandingPage(
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Settings",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = onEmergencyHotlinesClick) {
+                        Icon(
+                            imageVector = Icons.Default.Phone,
+                            contentDescription = "Emergency Hotlines",
                             tint = Color.White
                         )
                     }

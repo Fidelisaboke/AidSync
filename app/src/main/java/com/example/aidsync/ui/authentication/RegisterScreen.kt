@@ -26,9 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.aidsync.R
 import com.example.aidsync.data.entities.User
 import com.example.aidsync.ui.theme.AidSyncTheme
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.userProfileChangeRequest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

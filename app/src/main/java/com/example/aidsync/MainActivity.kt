@@ -10,9 +10,10 @@ import com.example.aidsync.ui.firstaid.FirstAidTopicsPage
 import com.example.aidsync.ui.patients.HomeScreen
 import com.example.aidsync.ui.patients.LandingPage
 import com.example.aidsync.ui.authentication.LoginScreen
-import com.example.aidsync.ui.patients.ProfileManagementPage
+import com.example.aidsync.ui.settings.ProfileManagementPage
 import com.example.aidsync.ui.authentication.RegisterScreen
-import com.example.aidsync.ui.patients.SettingsPage
+import com.example.aidsync.ui.emergency.EmergencyHotlinesPage
+import com.example.aidsync.ui.settings.SettingsPage
 import com.example.aidsync.ui.theme.AidSyncTheme
 
 class MainActivity : ComponentActivity() {
@@ -54,7 +55,8 @@ class MainActivity : ComponentActivity() {
                         LandingPage(
                             onSettingsClick = { navController.navigate("settings") },
                             onFirstAidTopicsClick = { navController.navigate("firstAidTopics") },
-                            onCasualtyReportClick = { navController.navigate("casualtyReport") }
+                            onCasualtyReportClick = { navController.navigate("casualtyReport") },
+                            onEmergencyHotlinesClick = { navController.navigate("emergencyHotlines") }
                         )
                     }
                     composable("settings") {
@@ -83,6 +85,13 @@ class MainActivity : ComponentActivity() {
                             navController = navController
                         )
                     }
+
+                    composable("emergencyHotlines") {
+                        EmergencyHotlinesPage(
+                            onBackClick = { navController.navigateUp() }
+                        )
+                    }
+
                 }
             }
         }
