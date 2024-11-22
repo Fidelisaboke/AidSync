@@ -90,8 +90,7 @@ fun LoginScreen(
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
-            ),
-            singleLine = true
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -110,26 +109,27 @@ fun LoginScreen(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults. colors(
+            colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
+                imeAction = ImeAction.Done
             ),
-            keyboardActions = KeyboardActions {
-                validateAndLogin(
-                    email = email,
-                    password = password,
-                    viewModel = viewModel,
-                    scope = scope,
-                    context = context,
-                    onLoginSuccess = onLoginSuccess,
-                    onLoginError = { loginError = true }
-                )
-            },
-            singleLine = true
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    validateAndLogin(
+                        email = email,
+                        password = password,
+                        viewModel = viewModel,
+                        scope = scope,
+                        context = context,
+                        onLoginSuccess = onLoginSuccess,
+                        onLoginError = { loginError = true }
+                    )
+                }
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -172,16 +172,6 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginPreview() {
-    AidSyncTheme {
-        LoginScreen(
-            onLoginSuccess = { println("Login successful!") },
-            onNavigateToRegister = { println("Navigating to register screen") }
-        )
-    }
-}
 
 private fun validateAndLogin(
     email: String,
@@ -191,14 +181,14 @@ private fun validateAndLogin(
     context: android.content.Context,
     onLoginSuccess: () -> Unit,
     onLoginError: () -> Unit
-){
+) {
     if (email.isNotBlank() && password.isNotBlank()) {
         scope.launch {
             val loginSuccess = viewModel.login(email, password)
 
             if (loginSuccess) {
                 onLoginSuccess()
-            } else{
+            } else {
                 onLoginError()
                 Toast.makeText(
                     context,
@@ -207,9 +197,23 @@ private fun validateAndLogin(
                 ).show()
             }
         }
-
     } else {
         onLoginError()
-        Toast.makeText(context, "Login failed. Please fill in the ", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            "Login failed. Please fill in all fields.",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginPreview() {
+    AidSyncTheme {
+        LoginScreen(
+            onLoginSuccess = { println("Login successful!") },
+            onNavigateToRegister = { println("Navigating to register screen") }
+        )
     }
 }
