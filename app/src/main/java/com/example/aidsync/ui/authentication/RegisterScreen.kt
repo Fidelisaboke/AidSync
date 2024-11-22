@@ -77,6 +77,7 @@ fun RegisterScreen(
             value = name,
             onValueChange = { name = it },
             label = { Text("Full Name", color = Color.Gray) },
+            singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
@@ -91,6 +92,7 @@ fun RegisterScreen(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email", color = Color.Gray) },
+            singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults. colors(
                 unfocusedBorderColor = Color.Gray,
@@ -105,6 +107,7 @@ fun RegisterScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password", color = Color.Gray) },
+            singleLine = true,
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val icon = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -126,6 +129,7 @@ fun RegisterScreen(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
             label = { Text("Confirm Password", color = Color.Gray) },
+            singleLine = true,
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults. colors(

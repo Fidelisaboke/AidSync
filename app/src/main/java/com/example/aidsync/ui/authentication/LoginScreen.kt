@@ -74,6 +74,7 @@ fun LoginScreen(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email", color = Color.Gray) },
+            singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Transparent),
@@ -90,6 +91,7 @@ fun LoginScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password", color = Color.Gray) },
+            singleLine = true,
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val icon = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
