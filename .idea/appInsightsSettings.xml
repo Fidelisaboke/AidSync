@@ -10,9 +10,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.aidsync" />
-                  <option name="mobileSdkAppId" value="1:194300790113:android:3369f32d47f6e3f2747120" />
-                  <option name="projectId" value="aidsync-d3757" />
-                  <option name="projectNumber" value="194300790113" />
+                  <option name="mobileSdkAppId" value="1:925750160068:android:58afa49e85d02728fa7791" />
+                  <option name="projectId" value="aidsync-e082e" />
+                  <option name="projectNumber" value="925750160068" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

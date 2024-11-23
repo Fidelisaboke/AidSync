@@ -1,8 +1,7 @@
 package com.example.aidsync.ui.patients
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -15,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,14 +26,14 @@ import com.example.aidsync.ui.theme.AidSyncTheme
 fun LandingPage(
     onCasualtyReportClick: () -> Unit = {},
     onPatientTrackerClick: () -> Unit = {},
-    onFirstAidTopicsClick: () -> Unit = {}, // Added parameter for First Aid Topics
+    onFirstAidTopicsClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onEmergencyHotlinesClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Welcome", fontWeight = FontWeight.Bold) },
+                title = { Text("Welcome", color = Color.White, fontWeight = FontWeight.Bold) },
                 actions = {
                     IconButton(onClick = onSettingsClick) {
                         Icon(
@@ -51,49 +51,75 @@ fun LandingPage(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = Color.White
+                    containerColor = Color(0xFF111827) // Dark theme for TopAppBar
                 )
             )
         },
         content = { innerPadding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .background(Color(0xFF111827)) // Dark background
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = "AidSync Logo",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(bottom = 16.dp)
-                )
-                Text(
-                    text = "Manage First Aid Effortlessly",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                Text(
-                    text = "Navigate through key features to assist in providing timely and effective first aid.",
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(bottom = 24.dp),
-                    color = Color.Gray
-                )
-
-                // Feature buttons as centered boxes
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    FeatureButton("Casualty Report", Icons.Default.Description, onCasualtyReportClick)
-                    FeatureButton("Patient Tracker", Icons.Default.MedicalServices, onPatientTrackerClick)
-                    FeatureButton("First Aid Topics", Icons.Default.Info, onFirstAidTopicsClick) // Added button
+                    // App Logo
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = "AidSync Logo",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .padding(bottom = 16.dp)
+                    )
+                    // Title
+                    Text(
+                        text = "Manage First Aid Effortlessly",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Green, // Accent green color
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    // Subtitle
+                    Text(
+                        text = "Navigate through key features to assist in providing timely and effective first aid.",
+                        fontSize = 16.sp,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 24.dp)
+                    )
+
+                    // Feature buttons
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        FeatureButton(
+                            label = "Casualty Report",
+                            icon = Icons.Default.Description,
+                            onClick = onCasualtyReportClick,
+                            backgroundColor = Color(0xFF2E7D32) // Darker green
+                        )
+                        FeatureButton(
+                            label = "Patient Tracker",
+                            icon = Icons.Default.MedicalServices,
+                            onClick = onPatientTrackerClick,
+                            backgroundColor = Color(0xFF1B5E20) // Darker, muted green
+                        )
+                        FeatureButton(
+                            label = "First Aid Topics",
+                            icon = Icons.Default.Info,
+                            onClick = onFirstAidTopicsClick,
+                            backgroundColor = Color(0xFF145A32) // Even darker muted green
+                        )
+                    }
                 }
             }
         }
@@ -101,32 +127,36 @@ fun LandingPage(
 }
 
 @Composable
-fun FeatureButton(label: String, icon: ImageVector, onClick: () -> Unit) {
-    Box(
+fun FeatureButton(
+    label: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+    backgroundColor: Color
+) {
+    Button(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth(0.8f)
-            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-            .padding(8.dp)
-            .clickable(onClick = onClick)
+            .height(50.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+        shape = RoundedCornerShape(8.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                icon,
+                imageVector = icon,
                 contentDescription = label,
-                modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = Color.White,
+                modifier = Modifier.padding(end = 16.dp)
             )
-            Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = label,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                color = Color.White
             )
         }
     }
