@@ -1,4 +1,4 @@
-package com.example.aidsync.ui.patients
+package com.example.aidsync.ui.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

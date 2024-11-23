@@ -95,14 +95,14 @@ fun HomeScreen(
                     ButtonWithHoverEffect(
                         text = "Login",
                         onClick = onLoginClick,
-                        backgroundColor = Color.Green, // Green accent button
+                        backgroundColor = Color(0xFF2E7D32), // Green accent button
                         textColor = Color.White
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     ButtonWithHoverEffect(
                         text = "Register",
                         onClick = onRegisterClick,
-                        backgroundColor = Color(0xFF4CAF50), // Slightly lighter green for differentiation
+                        backgroundColor = Color(0xFF1B5E20), // Slightly lighter green for differentiation
                         textColor = Color.White
                     )
                 }

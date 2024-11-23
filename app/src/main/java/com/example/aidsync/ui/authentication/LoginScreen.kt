@@ -1,10 +1,12 @@
-package com.example.aidsync.ui.patients
+package com.example.aidsync.ui.authentication
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -16,28 +18,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.aidsync.R
 import com.example.aidsync.ui.theme.AidSyncTheme
-import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login(
+fun LoginScreen(
     onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    viewModel: LoginViewModel = viewModel()
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     var loginError by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val auth = FirebaseAuth.getInstance()
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -72,12 +79,17 @@ fun Login(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email", color = Color.Gray) },
+            singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Transparent),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
             )
         )
 
@@ -88,6 +100,7 @@ fun Login(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password", color = Color.Gray) },
+            singleLine = true,
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val icon = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -96,9 +109,26 @@ fun Login(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults. colors(
+            colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Gray,
                 focusedBorderColor = Color.Green
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    validateAndLogin(
+                        email = email,
+                        password = password,
+                        viewModel = viewModel,
+                        scope = scope,
+                        context = context,
+                        onLoginSuccess = onLoginSuccess,
+                        onLoginError = { loginError = true }
+                    )
+                }
             )
         )
 
@@ -107,19 +137,15 @@ fun Login(
         // Login Button
         Button(
             onClick = {
-                if (email.isNotBlank() && password.isNotBlank()) {
-                    auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                onLoginSuccess()
-                            } else {
-                                loginError = true
-                                Toast.makeText(context, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                } else {
-                    loginError = true
-                }
+                validateAndLogin(
+                    email = email,
+                    password = password,
+                    viewModel = viewModel,
+                    scope = scope,
+                    context = context,
+                    onLoginSuccess = onLoginSuccess,
+                    onLoginError = { loginError = true }
+                )
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
@@ -146,11 +172,46 @@ fun Login(
     }
 }
 
+
+private fun validateAndLogin(
+    email: String,
+    password: String,
+    viewModel: LoginViewModel,
+    scope: CoroutineScope,
+    context: android.content.Context,
+    onLoginSuccess: () -> Unit,
+    onLoginError: () -> Unit
+) {
+    if (email.isNotBlank() && password.isNotBlank()) {
+        scope.launch {
+            val loginSuccess = viewModel.login(email, password)
+
+            if (loginSuccess) {
+                onLoginSuccess()
+            } else {
+                onLoginError()
+                Toast.makeText(
+                    context,
+                    "Login failed. Please try again.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    } else {
+        onLoginError()
+        Toast.makeText(
+            context,
+            "Login failed. Please fill in all fields.",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
     AidSyncTheme {
-        Login(
+        LoginScreen(
             onLoginSuccess = { println("Login successful!") },
             onNavigateToRegister = { println("Navigating to register screen") }
         )
