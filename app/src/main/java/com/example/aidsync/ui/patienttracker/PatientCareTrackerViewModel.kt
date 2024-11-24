@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aidsync.data.AppDatabase
-import com.example.aidsync.data.TestData
 import com.example.aidsync.data.entities.PatientLog
 import com.example.aidsync.data.repositories.PatientLogRepository
 import kotlinx.coroutines.flow.Flow
@@ -22,13 +21,6 @@ class PatientCareTrackerViewModel(application: Application) : AndroidViewModel(a
         val patientLogDao = AppDatabase.getDatabase(application).patientLogDao()
         patientLogRepository = PatientLogRepository(patientLogDao)
         allLogs = patientLogRepository.allLogs
-
-        // Initialize with data already entered in test data
-        viewModelScope.launch {
-            TestData.patientLogs.forEach{
-                patientLogRepository.insertLog(it)
-            }
-        }
     }
 
     fun addPatientLog(patientLog: PatientLog) = viewModelScope.launch {

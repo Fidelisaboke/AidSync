@@ -138,6 +138,8 @@ fun AddCasualtyReportDialog(
                         recordedBy = 1
                     )
                     onAddReport(report)
+                } else {
+                    // TODO: Show error message when required fields are blank.
                 }
             }) {
                 Text("Add")

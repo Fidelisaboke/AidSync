@@ -67,8 +67,6 @@ fun CasualtyReportDetailsScreen(
                 Button(
                     onClick = {
                         showDeleteConfirmationDialog = true
-                        viewModel.deleteReport(report!!)
-                        navController.navigateUp()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
@@ -84,7 +82,6 @@ fun CasualtyReportDetailsScreen(
             onSave = { updatedReport ->
                 viewModel.updateCasualtyReport(updatedReport)
                 showEditDialog = false
-                navController.navigateUp()
             }
         )
     }
