@@ -17,7 +17,7 @@ data class PatientLog(
 
     val description: String,
 
-    val date: String
+    val date: String,
 
-    // TODO: Add association with Firebase UID
+    val time: String
 )

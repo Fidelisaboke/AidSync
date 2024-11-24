@@ -1,34 +1,47 @@
 package com.example.aidsync.ui.patienttracker
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.aidsync.data.AppDatabase
+import com.example.aidsync.data.TestData
+import com.example.aidsync.data.entities.PatientLog
+import com.example.aidsync.data.repositories.PatientLogRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
-// Data class to hold details about patient sections (Vital Signs, Medications, etc.)
-data class PatientDetail(
-    val title: String,
-    val description: String
-)
 
-class PatientCareTrackerViewModel : ViewModel() {
-
-    // Holds the patient details for each section
-    private val _patientDetails = mutableStateListOf<PatientDetail>()
-    val patientDetails: List<PatientDetail> get() = _patientDetails
+class PatientCareTrackerViewModel(application: Application) : AndroidViewModel(application) {
+    private val patientLogRepository: PatientLogRepository
+    val allLogs: Flow<List<PatientLog>>
 
     init {
-        // Initialize with sample data
-        loadSampleData()
+        val patientLogDao = AppDatabase.getDatabase(application).patientLogDao()
+        patientLogRepository = PatientLogRepository(patientLogDao)
+        allLogs = patientLogRepository.allLogs
+
+        // Initialize with data already entered in test data
+        viewModelScope.launch {
+            TestData.patientLogs.forEach{
+                patientLogRepository.insertLog(it)
+            }
+        }
     }
 
-    private fun loadSampleData() {
-        _patientDetails.add(PatientDetail("Heart Rate", "75 bpm"))
-        _patientDetails.add(PatientDetail("Temperature", "98.6°F"))
-        _patientDetails.add(PatientDetail("Aspirin 100mg", "Medication"))
-        _patientDetails.add(PatientDetail("Vitamin D 200 IU", "Medication"))
-    }
+    fun addPatientLog(patientLog: PatientLog) = viewModelScope.launch {
+        val currentDate = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formattedDate = currentDate.format(formatter)
 
-    fun addPatientDetail(detail: PatientDetail) {
-        _patientDetails.add(detail)
+        val currentTime = LocalTime.now()
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        val formattedTime = currentTime.format(timeFormatter)
+
+        val newPatientLog = patientLog.copy(date = formattedDate, time = formattedTime)
+        patientLogRepository.insertLog(newPatientLog)
     }
 }
 

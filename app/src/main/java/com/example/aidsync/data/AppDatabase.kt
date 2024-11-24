@@ -30,7 +30,7 @@ import com.example.aidsync.data.entities.User
         PatientLog::class,
         User::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {

@@ -250,51 +250,88 @@ object TestData {
     val patientLogs = listOf(
         PatientLog(
             patientId = 1,
-            logType = "Medical Visit",
-            description = "Patient visited for a routine check-up.",
-            date = "2024-11-19"
+            logType = "Heart Rate",
+            description = "80 BPM",
+            date = "2024-11-19",
+            time = "08:00:00"
+        ),
+        PatientLog(
+            patientId = 1,
+            logType = "Heart Rate",
+            description = "90 BPM",
+            date = "2024-11-19",
+            time = "10:30:00"
+
+        ),
+        PatientLog(
+            patientId = 1,
+            logType = "Heart Rate",
+            description = "85 BPM",
+            date = "2024-11-19",
+            time = "10:00:00"
         ),
         PatientLog(
             patientId = 2,
             logType = "Medication",
             description = "Prescribed antibiotics for infection.",
-            date = "2024-11-18"
+            date = "2024-11-18",
+            time = "08:00:00"
+        ),
+        PatientLog(
+            patientId = 2,
+            logType = "Medication",
+            description = "Antihistamine",
+            date = "2024-11-18",
+            time = "08:00:00"
+        ),
+        PatientLog(
+            patientId = 2,
+            logType = "Medication",
+            description = "Antidepressant",
+            date = "2024-11-18",
+            time = "08:00:00"
         ),
         PatientLog(
             patientId = 1,
             logType = "Lab Test",
             description = "Blood test performed to check cholesterol levels.",
-            date = "2024-11-17"
+            date = "2024-11-17",
+            time = "08:00:00"
         ),
         PatientLog(
             patientId = 3,
             logType = "Follow-Up",
             description = "Follow-up appointment for previous surgery.",
-            date = "2024-11-16"
+            date = "2024-11-16",
+            time = "10:00:00"
         ),
         PatientLog(
             patientId = 4,
             logType = "Emergency",
             description = "Patient admitted to ER for severe abdominal pain.",
-            date = "2024-11-15"
+            date = "2024-11-15",
+            time = "12:00:00"
         ),
         PatientLog(
             patientId = 2,
             logType = "Consultation",
             description = "Consulted with dietitian for weight management.",
-            date = "2024-11-14"
+            date = "2024-11-14",
+            time = "08:00:00"
         ),
         PatientLog(
             patientId = 3,
             logType = "Vaccination",
             description = "Administered flu vaccine.",
-            date = "2024-11-13"
+            date = "2024-11-13",
+            time = "08:00:00"
         ),
         PatientLog(
             patientId = 4,
             logType = "Discharge",
             description = "Patient discharged after overnight observation.",
-            date = "2024-11-12"
+            date = "2024-11-12",
+            time = "08:00:00"
         )
     )
 

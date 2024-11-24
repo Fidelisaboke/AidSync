@@ -21,6 +21,4 @@ data class DietaryLog (
 
     @ColumnInfo(name = "recorded_by")
     val recordedBy: Int
-
-    // TODO: Add association with Firebase UID
 )

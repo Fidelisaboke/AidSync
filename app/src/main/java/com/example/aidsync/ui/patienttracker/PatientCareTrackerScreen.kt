@@ -18,14 +18,19 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.aidsync.data.entities.PatientLog
 import com.example.aidsync.ui.theme.AidSyncTheme
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PatientCareTrackerScreen(viewModel: PatientCareTrackerViewModel = viewModel()) {
     var selectedTab by remember { mutableIntStateOf(0) }
-    val patientDetails = viewModel.patientDetails
+    val patientLogs = viewModel.allLogs.collectAsState(initial = emptyList())
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -39,8 +44,17 @@ fun PatientCareTrackerScreen(viewModel: PatientCareTrackerViewModel = viewModel(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                // Handle adding new details
-                viewModel.addPatientDetail(PatientDetail("Heart Rate", "70 bpm"))
+                scope.launch {
+                    val randomHeartRate = Random.nextInt(60, 101)
+                    val newPatientLog = PatientLog(
+                        patientId = 1,
+                        logType = "Heart Rate",
+                        description = "$randomHeartRate BPM",
+                        date = "2023-08-01",
+                        time = "10:00"
+                    )
+                    viewModel.addPatientLog(newPatientLog)
+                }
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
@@ -56,9 +70,9 @@ fun PatientCareTrackerScreen(viewModel: PatientCareTrackerViewModel = viewModel(
                     Column(modifier = Modifier.fillMaxSize()) {
                         // Display different sections based on selectedTab
                         when (selectedTab) {
-                            0 -> VitalSignsSection(patientDetails)
-                            1 -> MedicationsSection(patientDetails)
-                            2 -> DietaryIntakeSection(patientDetails)
+                            0 -> VitalSignsSection(patientLogs.value)
+                            1 -> MedicationsSection(patientLogs.value)
+                            2 -> DietaryIntakeSection(patientLogs.value)
                             3 -> FluidBalanceSection()
                         }
                     }
@@ -100,36 +114,40 @@ fun PatientCareTrackerScreen(viewModel: PatientCareTrackerViewModel = viewModel(
 }
 
 @Composable
-fun VitalSignsSection(patientDetails: List<PatientDetail>) {
+fun VitalSignsSection(patientLogs: List<PatientLog>) {
     PatientCard(
         title = "Vital Signs",
         content = {
-            for (detail in patientDetails.filter { it.title == "Heart Rate" }) {
-                Text("${detail.title}: ${detail.description}", color = Color.White)
+            for (log in patientLogs.filter { it.logType == "Heart Rate" }) {
+                Text("${log.logType}: ${log.description}", color = Color.White)
+                Text("Date : ${log.date}")
+                Text("Time: ${log.time}")
+                Spacer(modifier = Modifier.padding(8.dp))
             }
         }
     )
 }
 
 @Composable
-fun MedicationsSection(patientDetails: List<PatientDetail>) {
+fun MedicationsSection(patientLogs: List<PatientLog>) {
     PatientCard(
         title = "Medications",
         content = {
-            for (detail in patientDetails.filter { it.title == "Medication" }) {
-                Text("${detail.title}: ${detail.description}", color = Color.White)
+            for (log in patientLogs.filter { it.logType == "Medication" }) {
+                Text("${log.logType}: ${log.description}", color = Color.White)
+                Spacer(modifier = Modifier.padding(8.dp))
             }
         }
     )
 }
 
 @Composable
-fun DietaryIntakeSection(patientDetails: List<PatientDetail>) {
+fun DietaryIntakeSection(patientLogs: List<PatientLog>) {
     PatientCard(
         title = "Dietary Intake",
         content = {
-            for (detail in patientDetails.filter { it.title == "Dietary Intake" }) {
-                Text("${detail.title}: ${detail.description}", color = Color.White)
+            for (log in patientLogs.filter { it.logType == "Dietary Intake" }) {
+                Text("${log}: ${log.description}", color = Color.White)
             }
         }
     )
