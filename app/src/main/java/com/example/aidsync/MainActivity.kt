@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.*
-import com.example.aidsync.ui.casualtyreport.CasualtyReportScreen
 import com.example.aidsync.ui.firstaid.FirstAidDetailsScreen
 import com.example.aidsync.ui.firstaid.FirstAidTopicsPage
 import com.example.aidsync.ui.patients.HomeScreen
@@ -12,6 +11,8 @@ import com.example.aidsync.ui.patients.LandingPage
 import com.example.aidsync.ui.authentication.LoginScreen
 import com.example.aidsync.ui.settings.ProfileManagementPage
 import com.example.aidsync.ui.authentication.RegisterScreen
+import com.example.aidsync.ui.casualtyreport.CasualtyReportDetailsScreen
+import com.example.aidsync.ui.casualtyreport.CasualtyReportScreen
 import com.example.aidsync.ui.emergency.EmergencyHotlinesPage
 import com.example.aidsync.ui.settings.SettingsPage
 import com.example.aidsync.ui.patienttracker.PatientCareTrackerScreen // Import PatientTrackerScreen
@@ -70,8 +71,17 @@ class MainActivity : ComponentActivity() {
                     composable("profileManagement") {
                         ProfileManagementPage(navController = navController)
                     }
+
                     composable("casualtyReport") {
-                        CasualtyReportScreen()
+                        CasualtyReportScreen(navController = navController)
+                    }
+
+                    composable("casualtyReportDetails/{reportId}") { backStackEntry ->
+                        val reportId = backStackEntry.arguments?.getString("reportId")?.toIntOrNull() ?: -1
+                        CasualtyReportDetailsScreen(
+                            reportId = reportId,
+                            navController = navController
+                        )
                     }
                     composable("firstAidTopics") {
                         FirstAidTopicsPage(
