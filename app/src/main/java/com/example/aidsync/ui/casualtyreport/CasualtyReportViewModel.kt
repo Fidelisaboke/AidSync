@@ -7,9 +7,10 @@ import com.example.aidsync.data.AppDatabase
 import com.example.aidsync.data.entities.CasualtyReport
 import com.example.aidsync.data.repositories.CasualtyReportRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class CasualtyReportViewModel(application: Application): AndroidViewModel(application) {
+class CasualtyReportViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: CasualtyReportRepository
     val allReports: Flow<List<CasualtyReport>>
 
@@ -21,5 +22,19 @@ class CasualtyReportViewModel(application: Application): AndroidViewModel(applic
 
     fun insertReport(report: CasualtyReport) = viewModelScope.launch {
         repository.insertCasualtyReport(report)
+    }
+
+    fun updateCasualtyReport(report: CasualtyReport) = viewModelScope.launch {
+        repository.updateCasualtyReport(report)
+    }
+
+    fun deleteReport(report: CasualtyReport) = viewModelScope.launch {
+        repository.deleteCasualtyReport(report)
+    }
+
+    fun getReportById(reportId: Int): Flow<CasualtyReport?> {
+        return repository.allReports.map { reports ->
+            reports.find { it.id == reportId }
+        }
     }
 }

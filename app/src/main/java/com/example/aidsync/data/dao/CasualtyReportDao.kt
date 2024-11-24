@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CasualtyReportDao {
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertReport(casualtyReport: CasualtyReport)
 
     @Update
@@ -29,5 +29,4 @@ interface CasualtyReportDao {
 
     @Query("SELECT * FROM casualty_reports WHERE casualty_name = :name ORDER BY incident_date DESC")
     fun getReportsByName(name: String): Flow<List<CasualtyReport>>
-
 }
