@@ -12,6 +12,7 @@ import com.example.aidsync.ui.patients.LandingPage
 import com.example.aidsync.ui.authentication.LoginScreen
 import com.example.aidsync.ui.settings.ProfileManagementPage
 import com.example.aidsync.ui.authentication.RegisterScreen
+import com.example.aidsync.ui.casualtyreport.CasualtyReportDetailsScreen
 import com.example.aidsync.ui.emergency.EmergencyHotlinesPage
 import com.example.aidsync.ui.patienttracker.PatientCareTrackerScreen
 import com.example.aidsync.ui.settings.SettingsPage
@@ -72,6 +73,13 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("casualtyReport") {
                         CasualtyReportScreen(navController = navController) // Route to CasualtyReportScreen
+                    }
+                    composable("casualtyReportDetails/{reportId}") { backStackEntry ->
+                        val reportId = backStackEntry.arguments?.getString("reportId")?.toIntOrNull() ?: -1
+                        CasualtyReportDetailsScreen(
+                            reportId = reportId,
+                            navController = navController
+                        )
                     }
                     composable("firstAidTopics") {
                         FirstAidTopicsPage(
