@@ -1,56 +1,44 @@
 package com.example.aidsync.ui.settings
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.aidsync.ui.theme.AidSyncTheme
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.userProfileChangeRequest
+import com.example.aidsync.data.AppDatabase
+import com.example.aidsync.data.entities.User
+import com.example.aidsync.data.repositories.UserRepository
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileManagementPage(navController: NavController) {
-    // Firebase Authentication instance
-    val auth = FirebaseAuth.getInstance()
-    val currentUser = auth.currentUser
+    // Access the Context using LocalContext
+    val context = LocalContext.current
 
-    // State variables to hold user profile details
-    var name by remember { mutableStateOf("Loading...") }
-    var email by remember { mutableStateOf("Loading...") }
-    var phoneNumber by remember { mutableStateOf("Loading...") }
+    // Initialize the repository
+    val database = AppDatabase.getDatabase(context)
+    val userDao = database.userDao()
+    val userRepository = UserRepository(userDao)
 
-    // Fetch user details from Firebase when the composable is first composed
-    LaunchedEffect(currentUser) {
-        currentUser?.let { user ->
-            name = user.displayName ?: "Unknown User"
-            email = user.email ?: "unknown@example.com"
-            phoneNumber = user.phoneNumber ?: "Not Provided"
-        }
-    }
+    // State variables to hold user details
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
 
-    // Function to save the updated profile
-    fun saveProfile() {
-        currentUser?.let { user ->
-            val profileUpdates = userProfileChangeRequest {
-                displayName = name
-                // Email and phone number updates require separate methods and verification
-            }
 
-            user.updateProfile(profileUpdates).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("ProfileManagement", "User profile updated.")
-                } else {
-                    Log.e("ProfileManagement", "Error updating profile", task.exception)
-                }
-            }
+    // Coroutine scope for background operations
+    val coroutineScope = rememberCoroutineScope()
+
+    // Load user details
+    LaunchedEffect(Unit) {
+        val user = userRepository.getUserById(1) // Fetch user with ID 1
+        user?.let {
+            name = it.name
+            email = it.email
         }
     }
 
@@ -65,7 +53,7 @@ fun ProfileManagementPage(navController: NavController) {
                     .padding(innerPadding)
                     .padding(16.dp)
             ) {
-                // Profile Name
+                // Name Field
                 Text("Name", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 TextField(
                     value = name,
@@ -75,33 +63,33 @@ fun ProfileManagementPage(navController: NavController) {
                         .padding(vertical = 8.dp)
                 )
 
-                // Email Address
+                // Email Field
                 Text("Email", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 TextField(
                     value = email,
-                    onValueChange = {},
+                    onValueChange = { /* No changes allowed for email */ },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    enabled = false // Email is not editable for now
+                    enabled = false // Email is not editable
                 )
 
-                // Phone Number
-                Text("Phone Number", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                TextField(
-                    value = phoneNumber,
-                    onValueChange = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    enabled = false // Phone number updates require verification
-                )
+
 
                 // Save Button
                 Button(
                     onClick = {
-                        saveProfile()
-                        navController.popBackStack() // Navigate back to the previous page
+                        coroutineScope.launch {
+                            userRepository.updateUser(
+                                User(
+                                    id = 1, // Replace with actual user ID
+                                    name = name,
+                                    email = email,
+                                    password = "" // Placeholder for password
+                                )
+                            )
+                            navController.popBackStack() // Navigate back after saving
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -112,12 +100,4 @@ fun ProfileManagementPage(navController: NavController) {
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfileManagementPagePreview() {
-    AidSyncTheme {
-        ProfileManagementPage(navController = rememberNavController())
-    }
 }

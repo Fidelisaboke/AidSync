@@ -111,8 +111,9 @@ class UserAuthenticationTest {
         userRepository = UserRepository(userDao)
         userRepository.registerUser(user)
 
-        val isLoginSuccess = userRepository.loginUser(user)
-        assert(isLoginSuccess)
+        // Pass valid email and password to the loginUser function
+        val isLoginSuccess = userRepository.loginUser(user.email, user.password)
+        assert(isLoginSuccess) { "Login should succeed with valid credentials." }
     }
 
     /**
@@ -129,8 +130,9 @@ class UserAuthenticationTest {
         userRepository = UserRepository(userDao)
         userRepository.registerUser(user)
 
-        val isLoginSuccess = userRepository.loginUser(user.copy(email = "invalid_email"))
-        assert(!isLoginSuccess)
+        // Pass invalid email and valid password to the loginUser function
+        val isLoginSuccess = userRepository.loginUser("invalid_email@example.com", user.password)
+        assert(!isLoginSuccess) { "Login should fail with an invalid email." }
     }
 
     /**
@@ -147,9 +149,52 @@ class UserAuthenticationTest {
         userRepository = UserRepository(userDao)
         userRepository.registerUser(user)
 
-        val isLoginSuccess = userRepository.loginUser(user.copy(password = "invalid_password"))
-        assert(!isLoginSuccess)
+        // Pass valid email and invalid password to the loginUser function
+        val isLoginSuccess = userRepository.loginUser(user.email, "invalid_password")
+        assert(!isLoginSuccess) { "Login should fail with an invalid password." }
     }
+
+    /**
+     * Test that the getUserByEmail functions works correctly..
+     */
+    @Test
+    fun retrieve_user_by_email() = runBlocking {
+        val user = User(
+            name = "Alice Smith",
+            email = "alice.smith@example.com",
+            password = "securepassword"
+        )
+
+        userRepository = UserRepository(userDao)
+        userRepository.registerUser(user)
+
+        val retrievedUser = userRepository.getUserByEmail("alice.smith@example.com")
+        assertNotNull(retrievedUser)
+        assert(retrievedUser?.name == "Alice Smith")
+        assert(retrievedUser?.email == "alice.smith@example.com")
+    }
+
+    /**
+     * Test that the user cannot login with empty email or password.
+     */
+    @Test
+    fun registration_fails_with_empty_email_or_password() = runBlocking {
+        val user = User(name = "Empty Email", email = "", password = "password123")
+        val userWithEmptyPassword = User(name = "Empty Password", email = "empty.password@example.com", password = "")
+
+        userRepository = UserRepository(userDao)
+
+        val successEmptyEmail = userRepository.registerUser(user)
+        val successEmptyPassword = userRepository.registerUser(userWithEmptyPassword)
+
+        assert(!successEmptyEmail)
+        assert(!successEmptyPassword)
+    }
+
+    /**
+     * Test that the login is case-sensitive for emails.
+     */
+
 
 
 }

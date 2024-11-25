@@ -175,7 +175,4 @@ class AppDatabaseTest {
         assertEquals(insertedReport.id, retrievedReport?.id)
     }
 
-
-
-
 }

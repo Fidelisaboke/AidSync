@@ -30,10 +30,24 @@ class UserRepository(val dao: UserDao) {
     }
 
     /**
+     * Fetch a user by ID.
+     */
+    suspend fun getUserById(id: Int): User?  {
+        return dao.getUserById(id)
+    }
+
+    /**
      * Retrieves a user by their email.
      */
     suspend fun getUserByEmail(email: String): User? {
         return dao.getUserByEmail(email)
+    }
+
+    /**
+     * Update user details.
+     */
+    suspend fun updateUser(user: User) {
+        dao.updateUser(user)
     }
 
     /**
