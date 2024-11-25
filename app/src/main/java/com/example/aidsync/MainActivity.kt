@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.*
-import com.example.aidsync.ui.casualtyreport.CasualtyReportScreen
 import com.example.aidsync.ui.firstaid.FirstAidDetailsScreen
 import com.example.aidsync.ui.firstaid.FirstAidTopicsPage
 import com.example.aidsync.ui.patients.HomeScreen
@@ -12,8 +11,11 @@ import com.example.aidsync.ui.patients.LandingPage
 import com.example.aidsync.ui.authentication.LoginScreen
 import com.example.aidsync.ui.settings.ProfileManagementPage
 import com.example.aidsync.ui.authentication.RegisterScreen
+import com.example.aidsync.ui.casualtyreport.CasualtyReportDetailsScreen
+import com.example.aidsync.ui.casualtyreport.CasualtyReportScreen
 import com.example.aidsync.ui.emergency.EmergencyHotlinesPage
 import com.example.aidsync.ui.settings.SettingsPage
+import com.example.aidsync.ui.patienttracker.PatientCareTrackerScreen // Import PatientTrackerScreen
 import com.example.aidsync.ui.theme.AidSyncTheme
 
 class MainActivity : ComponentActivity() {
@@ -56,28 +58,37 @@ class MainActivity : ComponentActivity() {
                             onSettingsClick = { navController.navigate("settings") },
                             onFirstAidTopicsClick = { navController.navigate("firstAidTopics") },
                             onCasualtyReportClick = { navController.navigate("casualtyReport") },
+                            onPatientTrackerClick = { navController.navigate("patientTracker") }, // Navigate to PatientTrackerScreen
                             onEmergencyHotlinesClick = { navController.navigate("emergencyHotlines") }
                         )
                     }
                     composable("settings") {
                         SettingsPage(
-                            navController = navController,  // Pass navController to SettingsPage
+                            navController = navController,
                             onProfileClick = { navController.navigate("profileManagement") }
                         )
                     }
                     composable("profileManagement") {
                         ProfileManagementPage(navController = navController)
                     }
+
                     composable("casualtyReport") {
-                        CasualtyReportScreen() // Route to CasualtyReportScreen
+                        CasualtyReportScreen(navController = navController)
+                    }
+
+                    composable("casualtyReportDetails/{reportId}") { backStackEntry ->
+                        val reportId = backStackEntry.arguments?.getString("reportId")?.toIntOrNull() ?: -1
+                        CasualtyReportDetailsScreen(
+                            reportId = reportId,
+                            navController = navController
+                        )
                     }
                     composable("firstAidTopics") {
                         FirstAidTopicsPage(
-                            navController = navController,  // Pass navController to FirstAidTopicsPage
+                            navController = navController,
                             onBackClick = { navController.navigateUp() }
                         )
                     }
-
                     composable("firstAidDetails/{topic}") { backStackEntry ->
                         val topic = backStackEntry.arguments?.getString("topic") ?: ""
                         FirstAidDetailsScreen(
@@ -85,13 +96,14 @@ class MainActivity : ComponentActivity() {
                             navController = navController
                         )
                     }
-
                     composable("emergencyHotlines") {
                         EmergencyHotlinesPage(
                             onBackClick = { navController.navigateUp() }
                         )
                     }
-
+                    composable("patientTracker") {
+                        PatientCareTrackerScreen() // Route to PatientCareTrackerScreen
+                    }
                 }
             }
         }
