@@ -22,4 +22,18 @@ class CasualtyReportViewModel(application: Application): AndroidViewModel(applic
     fun insertReport(report: CasualtyReport) = viewModelScope.launch {
         repository.insertCasualtyReport(report)
     }
+
+    fun updateReport(report: CasualtyReport) = viewModelScope.launch {
+        repository.updateCasualtyReport(report)
+    }
+
+    fun deleteReport(report: CasualtyReport) = viewModelScope.launch {
+        repository.deleteCasualtyReport(report)
+    }
+
+    fun getReportById(id: Int): Flow<CasualtyReport> {
+        return repository.getReportById(id)
+    }
+
+
 }

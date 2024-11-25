@@ -80,7 +80,7 @@ fun CasualtyReportDetailsScreen(
             report = report!!,
             onDismiss = { showEditDialog = false },
             onSave = { updatedReport ->
-                viewModel.updateCasualtyReport(updatedReport)
+                viewModel.updateReport(updatedReport)
                 showEditDialog = false
             }
         )
@@ -187,5 +187,3 @@ fun DeleteConfirmationDialog(
         )
     }
 }
-
-
