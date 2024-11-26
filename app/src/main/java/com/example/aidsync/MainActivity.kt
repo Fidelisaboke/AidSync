@@ -3,8 +3,6 @@ package com.example.aidsync
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.aidsync.ui.casualtyreport.CasualtyReportScreen
 import com.example.aidsync.ui.firstaid.FirstAidDetailsScreen
@@ -15,6 +13,7 @@ import com.example.aidsync.ui.authentication.LoginScreen
 import com.example.aidsync.ui.settings.ProfileManagementPage
 import com.example.aidsync.ui.authentication.RegisterScreen
 import com.example.aidsync.ui.emergency.EmergencyHotlinesPage
+import com.example.aidsync.ui.patienttracker.PatientCareTrackerScreen
 import com.example.aidsync.ui.settings.SettingsPage
 import com.example.aidsync.ui.theme.AidSyncTheme
 
@@ -22,105 +21,84 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AidSyncApp()
-        }
-    }
-}
+            AidSyncTheme {
+                val navController = rememberNavController()
 
-@Composable
-fun AidSyncApp() {
-    AidSyncTheme {
-        val navController = rememberNavController()
-        NavHostControllerSetup(navController = navController)
-    }
-}
-
-@Composable
-fun NavHostControllerSetup(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "home") {
-
-        // Home Screen
-        composable("home") {
-            HomeScreen(
-                onLoginClick = { navController.navigate("login") },
-                onRegisterClick = { navController.navigate("register") }
-            )
-        }
-
-        // Login Screen
-        composable("login") {
-            LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate("landing") {
-                        popUpTo("home") { inclusive = true }
+                // NavHost to manage navigation
+                NavHost(navController = navController, startDestination = "home") {
+                    composable("home") {
+                        HomeScreen(
+                            onLoginClick = { navController.navigate("login") },
+                            onRegisterClick = { navController.navigate("register") }
+                        )
                     }
-                },
-                onNavigateToRegister = { navController.navigate("register") }
-            )
-        }
-
-        // Register Screen
-        composable("register") {
-            RegisterScreen(
-                onRegisterSuccess = {
-                    navController.navigate("landing") {
-                        popUpTo("home") { inclusive = true }
+                    composable("login") {
+                        LoginScreen(
+                            onLoginSuccess = {
+                                navController.navigate("landing") {
+                                    popUpTo("home") { inclusive = true }
+                                }
+                            },
+                            onNavigateToRegister = { navController.navigate("register") }
+                        )
                     }
-                },
-                onNavigateToLogin = { navController.navigate("login") }
-            )
-        }
+                    composable("register") {
+                        RegisterScreen(
+                            onRegisterSuccess = {
+                                navController.navigate("landing") {
+                                    popUpTo("home") { inclusive = true }
+                                }
+                            },
+                            onNavigateToLogin = { navController.navigate("login") }
+                        )
+                    }
+                    composable("landing") {
+                        LandingPage(
+                            onSettingsClick = { navController.navigate("settings") },
+                            onFirstAidTopicsClick = { navController.navigate("firstAidTopics") },
+                            onCasualtyReportClick = { navController.navigate("casualtyReport") },
+                            onPatientTrackerClick = { navController.navigate("patientTracker")},
+                            onEmergencyHotlinesClick = { navController.navigate("emergencyHotlines") }
+                        )
+                    }
+                    composable("settings") {
+                        SettingsPage(
+                            navController = navController,  // Pass navController to SettingsPage
+                            onProfileClick = { navController.navigate("profileManagement") }
+                        )
+                    }
+                    composable("profileManagement") {
+                        ProfileManagementPage(navController = navController)
+                    }
+                    composable("casualtyReport") {
+                        CasualtyReportScreen(navController = navController) // Route to CasualtyReportScreen
+                    }
+                    composable("firstAidTopics") {
+                        FirstAidTopicsPage(
+                            navController = navController,  // Pass navController to FirstAidTopicsPage
+                            onBackClick = { navController.navigateUp() }
+                        )
+                    }
 
-        // Landing Page
-        composable("landing") {
-            LandingPage(
-                onSettingsClick = { navController.navigate("settings") },
-                onFirstAidTopicsClick = { navController.navigate("firstAidTopics") },
-                onCasualtyReportClick = { navController.navigate("casualtyReport") },
-                onEmergencyHotlinesClick = { navController.navigate("emergencyHotlines") }
-            )
-        }
+                    composable("firstAidDetails/{topic}") { backStackEntry ->
+                        val topic = backStackEntry.arguments?.getString("topic") ?: ""
+                        FirstAidDetailsScreen(
+                            topic = topic,
+                            navController = navController
+                        )
+                    }
 
-        // Settings Page
-        composable("settings") {
-            SettingsPage(
-                navController = navController,
-                onProfileClick = { navController.navigate("profileManagement") }
-            )
-        }
+                    composable("emergencyHotlines") {
+                        EmergencyHotlinesPage(
+                            onBackClick = { navController.navigateUp() }
+                        )
+                    }
+                    composable("patientTracker") {
+                        PatientCareTrackerScreen() // Route to PatientCareTrackerScreen
+                    }
 
-        // Profile Management Page
-        composable("profileManagement") {
-            ProfileManagementPage(navController = navController)
-        }
-
-        // Casualty Report Screen
-        composable("casualtyReport") {
-            CasualtyReportScreen(navController = navController)
-        }
-
-        // First Aid Topics Page
-        composable("firstAidTopics") {
-            FirstAidTopicsPage(
-                navController = navController,
-                onBackClick = { navController.navigateUp() }
-            )
-        }
-
-        // First Aid Details Screen
-        composable("firstAidDetails/{topic}") { backStackEntry ->
-            val topic = backStackEntry.arguments?.getString("topic") ?: ""
-            FirstAidDetailsScreen(
-                topic = topic,
-                navController = navController
-            )
-        }
-
-        // Emergency Hotlines Page
-        composable("emergencyHotlines") {
-            EmergencyHotlinesPage(
-                onBackClick = { navController.navigateUp() }
-            )
+                }
+            }
         }
     }
 }
