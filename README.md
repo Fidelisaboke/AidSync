@@ -2,6 +2,14 @@
 
 AidSync is a comprehensive Mobile First Aid Assistant application designed to empower first aiders and first responders with a digital tool for efficient casualty management and record-keeping. This app ensures timely and effective care during emergencies and enhances the organization and collaboration of first aid teams.
 
+## Table of Contents
+- Features
+- Key Benefits
+- Target Audience
+- Challenges and Considerations
+- Technologies Used
+- Basic App Usage
+
 ## Features
 
 - **Digital Casualty Report Form**: Capture and store crucial information about casualties in real time.
@@ -42,7 +50,7 @@ AidSync is designed for:
 - **Firebase**: For authentication and secure data storage.
 - **Material3 Design**: Ensures a sleek and cohesive design throughout the app.
 
-## How to Use
+## Basic App Usage
 
 1. **Registration/Login**: Users can register for a new account or log in if they already have one.
 2. **Home Page**: Access all features, including casualty reports, patient tracking, and protocols.
@@ -56,5 +64,25 @@ AidSync is designed for:
 
 ### Installation
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/aidsync.git
+- Open Android Studio and go to `File -> New -> Project from Version Control -> Git`
+- Paste the GitHub repository URL into the **URL** field.
+- Choose a directory to clone the project into and click **Clone.**
+- Alternatively, you can open your terminal and run the command below:
+```bash
+git clone https://github.com/JesseMburu/AidSync.git
+```
+
+2. Import the project:
+- Once the cloning is complete, Android Studio will automatically import the project.
+- If not, go to `File -> Open` and select the root directory of the cloned project.
+
+3. Resolve Dependencies:
+- Android Studio automatically syncs the project and resolve dependencies.
+- If you encounter any issues, check the `Gradle Console` for error messages.
+
+4. Configure Emulator or Device:
+- Create a virtual device with the desired API level and device configuration.
+- If you prefer using a physical device, enable Developer Options and USB Debugging on your device, then connect it to your computer via a USB cable.
+
+### Basic Usage
+- Click the `Run` button on Android Studio to deploy and launch the app on an emulator or device.
