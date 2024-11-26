@@ -3,13 +3,13 @@
 AidSync is a comprehensive Mobile First Aid Assistant application designed to empower first aiders and first responders with a digital tool for efficient casualty management and record-keeping. This app ensures timely and effective care during emergencies and enhances the organization and collaboration of first aid teams.
 
 ## Table of Contents
-- Features
-- Key Benefits
-- Target Audience
-- Challenges and Considerations
-- Technologies Used
-- Basic App Usage
-- Getting Started
+- [Features](#features)
+- [Key Benefits](#key-benefits)
+- [Target Audience](#target-audience)
+- [Challenges and Considerations](#challenges-and-considerations)
+- [Technologies Used](#challenges-and-considerations)
+- [Basic App Usage](#basic-app-usage)
+- [Getting Started](#getting-started)
 
 ## Features
 
