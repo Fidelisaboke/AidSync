@@ -25,7 +25,6 @@ import com.example.aidsync.ui.theme.AidSyncTheme
 @Composable
 fun LandingPage(
     onCasualtyReportClick: () -> Unit = {},
-    onPatientTrackerClick: () -> Unit = {},
     onFirstAidTopicsClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onEmergencyHotlinesClick: () -> Unit = {}
@@ -106,12 +105,6 @@ fun LandingPage(
                             icon = Icons.Default.Description,
                             onClick = onCasualtyReportClick,
                             backgroundColor = Color(0xFF2E7D32) // Darker green
-                        )
-                        FeatureButton(
-                            label = "Patient Tracker",
-                            icon = Icons.Default.MedicalServices,
-                            onClick = onPatientTrackerClick,
-                            backgroundColor = Color(0xFF1B5E20) // Darker, muted green
                         )
                         FeatureButton(
                             label = "First Aid Topics",
