@@ -9,6 +9,7 @@ AidSync is a comprehensive Mobile First Aid Assistant application designed to em
 - Challenges and Considerations
 - Technologies Used
 - Basic App Usage
+- Getting Started
 
 ## Features
 
